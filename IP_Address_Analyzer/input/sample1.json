@@ -1,0 +1,50 @@
+{
+  "ip_proto": [
+    "ICMP"
+  ],
+  "highest_protocol": [
+    "ICMP"
+  ],
+  "udp_length": [
+    53
+  ],
+  "icmp_type": [
+    11
+  ],
+  "dstport": [
+    53
+  ],
+  "fragmentation": [
+    false
+  ],
+  "tags": [
+    "ICMP",
+    "UDP_SUSPECT_LENGTH"
+  ],
+  "start_time": "2013-08-14 22:56:40",
+  "duration_sec": 22,
+  "total_dst_ports": 1,
+  "avg_bps": 1025,
+  "total_packets": 255,
+  "key": "cce08ce5b4340660006b1450a6735590",
+  "key_sha256": "4c81ee27d7b2c1488bce0cca99a869ceca05f8cb8d6f3b86d8fcbe82e73680ba",
+  "multivector_key": "4c81ee27d7b2c1488bce0cca99a869ceca05f8cb8d6f3b86d8fcbe82e73680ba",
+  "total_ips": 14,
+  "amplifiers": "None",
+  "attackers": [
+    "43.87.233.145",
+    "235.82.153.205",
+    "111.95.187.49",
+    "109.99.71.57",
+    "93.191.141.215",
+    "249.241.122.113",
+    "245.217.169.239",
+    "113.83.107.151",
+    "39.93.103.181",
+    "233.217.254.18",
+    "251.99.11.179",
+    "221.217.122.57",
+    "233.217.254.28",
+    "37.97.239.111"
+  ]
+}

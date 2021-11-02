@@ -1,0 +1,48 @@
+<p align="center"><img width=30.5% src="https://github.com/ddos-clearing-house/ddos_dissector/blob/3.0/media/header.png?raw=true"></p>
+
+
+ <p align="center">
+  <img width=30.5% src="https://github.com/ddos-clearing-house/dddosdb-in-a-box/blob/master/imgs/concordia-logo.png?raw=true">
+ <p align="center"><img width=30.5% src="https://github.com/ddos-clearing-house/dddosdb-in-a-box/blob/master/imgs/No-More-DDoS-2-removebg-preview.png?raw=true"></p>
+</p>
+
+## IP Address Analyzer - Overview
+
+This script gets a json DDoS fingerprint file as input and adds metadata for the source IP addresses existing in the fingerprint by querying them against local and external databases. Results are written to a new fingerprint file with more entries for each IP address.
+
+
+## How to start?
+
+1. Install the ip_address_analyzer
+
+```bash
+git clone https://github.com/ramin-y/IP_Address_Analyzer
+pip3 install -r requirements.txt
+chmod +x ip_analyzer.py
+```
+
+2. Provide a raw fingerprint to be analyzed
+
+This package is compatible with the fingerprints that have a similar syntax to ones produced as the output of running the <a href="https://github.com/ddos-clearing-house/ddos_dissector">DDoS Dissector</a> component. Sample input fingerprints are provided in the <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/input">input</a> directory of the repository.
+
+3. Run the software
+```
+./ip_analyzer.py --input /path/to/input/fingerprint.json
+```
+
+4. Check the generated fingerprint (json file). 
+
+The enriched fingerprints are stored in the <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/output">output</a> directory of the repository. You might use any tool to explore the additional metadata in the generated fingerprint.
+
+
+## Supported lookups:
+
+1. IP address type: <a href="https://docs.python.org/3/library/ipaddress.html#module-ipaddress">ipaddress</a> library of python is used to infer the type for each IP address existing in the fingerprint. This step is a preliminary step to run the follow up lookups and thus is set to always run as the first test.
+2. Autonomous System Number (ASN): This is based on the BGP data provided by the <a href="http://www.routeviews.org/routeviews/">Routeviews</a> project and adds the ASN field to the fingerprint.
+3. Geo-IP: <a href="https://lite.ip2location.com/database">IP2Location LITE</a> database (free) is used in this step to extract the geolocation details as well as the usage type corresponding to the IP address. Currently <a href="https://lite.ip2location.com/database/ip-country-region-city-latitude-longitude-zipcode-timezone">DB11</a> and <a href="https://lite.ip2location.com/database/px10-ip-proxytype-country-region-city-isp-domain-usagetype-asn-lastseen-threat-residential">PX10</a> databases can be downloaded for free. The download token can be found <a href="https://lite.ip2location.com/file-download">here</a>.
+4. Geo-IP:  <a href="https://www.ip2location.com/database">IP2Location</a> database (licensed) is used in this step to extract the geolocation details as well as the usage type corresponding to the IP address. BIN database files (IP2location DB and/or IP2Proxy PX) need to be stored in the corresponding folders as two sample files <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2location">IP-COUNTRY-SAMPLE.BIN</a> and <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2proxy">IP2PROXY-IP-COUNTRY.BIN</a>.   
+5. Network upload and download speed: <a href="https://ipinfo.io/">ipinfo</a> is used to extract the average network speeds for the subnet that the attacker IP resides in.
+6. Open ports: Two Internet scanning services of <a href="https://censys.io/">Censys</a> and  <a href="https://shodan.io/">Shodan</a> are used to infer the open ports of the attacking hosts. The first time you try a lookup using one of these databases, you will be prompted to provide the coresponding api keys.
+7. Operating System: Shodan database is used to lookup the operating system (if such info exists) of the attacker hosts. As mentioned above, an api key is needed to run the lookups.   
+
+

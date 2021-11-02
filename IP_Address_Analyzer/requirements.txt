@@ -1,0 +1,9 @@
+pandas==0.25.3
+pyasn==1.6.1
+beautifulsoup4==4.6.0
+censys==0.0.8
+shodan==1.25.0
+ipaddress==1.0.17
+python-dotenv==0.17.0
+IP2Location==8.5.1
+IP2Proxy==3.1.2
