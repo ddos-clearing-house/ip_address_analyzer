@@ -37,12 +37,18 @@ The enriched fingerprints are stored in the <a href="https://github.com/ramin-y/
 
 ## Supported lookups:
 
-1. IP address type: <a href="https://docs.python.org/3/library/ipaddress.html#module-ipaddress">ipaddress</a> library of python is used to infer the type for each IP address existing in the fingerprint. This step is a preliminary step to run the follow up lookups and thus is set to always run as the first test.
-2. Autonomous System Number (ASN): This is based on the BGP data provided by the <a href="http://www.routeviews.org/routeviews/">Routeviews</a> project and adds the ASN field to the fingerprint.
+1. IP address type: <a href="https://docs.python.org/3/library/ipaddress.html#module-ipaddress">ipaddress</a> library of python is used to infer the type for each IP address existing in the fingerprint. This step is a preliminary step to run the follow up lookups and thus is set to always run as the first test. Besides, this is helpful first step for deploying mitigation rules on operational networks. For example, randomly spoofed DDoS attacks might include private IP ranges which should already be dropped at the edge router anyway, as they are not supposed to originate outside a network.
+
+2. Autonomous System Number (ASN): This is based on the BGP data provided by the <a href="http://www.routeviews.org/routeviews/">Routeviews</a> project and adds the ASN field to the fingerprint. This can be used to infer whether some networks contribute more than others to a specific attack. 
+
 3. Geo-IP: <a href="https://lite.ip2location.com/database">IP2Location LITE</a> database (free) is used in this step to extract the geolocation details as well as the usage type corresponding to the IP address. Currently <a href="https://lite.ip2location.com/database/ip-country-region-city-latitude-longitude-zipcode-timezone">DB11</a> and <a href="https://lite.ip2location.com/database/px10-ip-proxytype-country-region-city-isp-domain-usagetype-asn-lastseen-threat-residential">PX10</a> databases can be downloaded for free. The download token can be found <a href="https://lite.ip2location.com/file-download">here</a>.
+
 4. Geo-IP:  <a href="https://www.ip2location.com/database">IP2Location</a> database (licensed) is used in this step to extract the geolocation details as well as the usage type corresponding to the IP address. BIN database files (IP2location DB and/or IP2Proxy PX) need to be stored in the corresponding folders as two sample files <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2location">IP-COUNTRY-SAMPLE.BIN</a> and <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2proxy">IP2PROXY-IP-COUNTRY.BIN</a>.   
+
 5. Network upload and download speed: <a href="https://ipinfo.io/">ipinfo</a> is used to extract the average network speeds for the subnet that the attacker IP resides in.
+
 6. Open ports: Two Internet scanning services of <a href="https://censys.io/">Censys</a> and  <a href="https://shodan.io/">Shodan</a> are used to infer the open ports of the attacking hosts. The first time you try a lookup using one of these databases, you will be prompted to provide the coresponding api keys.
+
 7. Operating System: Shodan database is used to lookup the operating system (if such info exists) of the attacker hosts. As mentioned above, an api key is needed to run the lookups.   
 
 
