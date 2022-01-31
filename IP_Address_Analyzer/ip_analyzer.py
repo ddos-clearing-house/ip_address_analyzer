@@ -615,7 +615,7 @@ if __name__ == '__main__':
     print ("    6) Open ports lookup on Censys")
     print ("    7) Operating system and open ports lookup on Shodan")
     print ("    8) Plot a world map of IP address geolocations\n")
-#    print ("    9) Network speed measurements of M-LAB")
+    print ("    9) Network speed measurements of M-LAB")
 
     input_list = list(map(int, input("Enter the list of desired queries to run separated by space (numbers only): \n").split()))
     lookup_list = list(df_lookup[df_lookup['lookup_number'].isin(input_list)]['lookup_name'])
