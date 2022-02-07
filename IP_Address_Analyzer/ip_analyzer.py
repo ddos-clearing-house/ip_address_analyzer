@@ -144,18 +144,21 @@ def ipinfo(ip):
     found = 0
     list = []
     list.append(ip)
-    for li in bs.findAll('li'):
-        for strong in li.findAll('strong'):
-            for small in li.findAll('small'):
-                if "flex-grow-1" in str(strong.get('class')):
-                    if small.text != "Ping":
-                        list.append(strong.text)
-                        found = 1
+    for tr in bs.findAll('tr'):
+        if "Anycast" in str(tr):
+            if "True" in str(tr):
+                list.append("True")
+                found = 1
+            elif "False" in str(tr):
+                list.append("False")
+                found = 1
+            break;
 
     if found == 0:
-        return ip, "-", "-"
+        return ip, "-"
     else:
         return list
+
 
 
 
@@ -478,9 +481,8 @@ def fingerprint_extender(ip, category):
             fingerprint_json[category][ip].update({'Net_Speed':str(df_ip2location[df_ip2location.Source==ip]['net_speed'].iloc[0])})
 
     if 'ipinfo' in lookup_list:
-        if len(df_ipinfo.loc[df_ipinfo['Source']==ip,'Download_Mbps']):
-            fingerprint_json[category][ip].update({'Upload_Mbps_ipinfo':str(df_ipinfo[df_ipinfo.Source==ip]['Upload_Mbps'].iloc[0])})
-            fingerprint_json[category][ip].update({'Download_Mbps_ipinfo':str(df_ipinfo[df_ipinfo.Source==ip]['Download_Mbps'].iloc[0])})
+        if len(df_ipinfo.loc[df_ipinfo['Source']==ip,'Anycast']):
+            fingerprint_json[category][ip].update({'Anycast':str(df_ipinfo[df_ipinfo.Source==ip]['Anycast'].iloc[0])})
 
     if 'censys' in lookup_list:
         if len(df_censys.loc[df_censys['Source']==ip,'Open_ports']):
@@ -611,7 +613,7 @@ if __name__ == '__main__':
     print ("    2) AS numbers lookup using BGP information of RouteViews")
     print ("    3) Geo-ip database lookup on IP2Location and IP2Proxy Lite (free)")
     print ("    4) Geo-ip database lookup on IP2Location (licenced)")
-    print ("    5) Network speed lookup on ipinfo")
+    print ("    5) Anycast usage lookup on ipinfo")
     print ("    6) Open ports lookup on Censys")
     print ("    7) Operating system and open ports lookup on Shodan")
     print ("    8) Plot a world map of IP address geolocations\n")
@@ -681,10 +683,10 @@ if __name__ == '__main__':
         #df_ip2location_csv = ip2location_csv_lookup(global_ips)
 
     if 'ipinfo' in lookup_list:
-        print ("Running network speed queries using ipinfo ...")
+        print ("Running anycast lookup using ipinfo ...")
         ipinfo_results=[]
         ipinfo_results.extend(global_ips.Source.apply(ipinfo))
-        df_ipinfo = pd.DataFrame(ipinfo_results,columns=["Source","Download_Mbps","Upload_Mbps"])
+        df_ipinfo = pd.DataFrame(ipinfo_results,columns=["Source","Anycast"])
 
 
     if 'censys' in lookup_list:
