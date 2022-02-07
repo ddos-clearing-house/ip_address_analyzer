@@ -45,10 +45,13 @@ The enriched fingerprints are stored in the <a href="https://github.com/ramin-y/
 
 4. Geo-IP:  <a href="https://www.ip2location.com/database">IP2Location</a> database (licensed) is used in this step to extract the geolocation details as well as the usage type corresponding to the IP address. BIN database files (IP2location DB and/or IP2Proxy PX) need to be stored in the corresponding folders as two sample files <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2location">IP-COUNTRY-SAMPLE.BIN</a> and <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/data/ip2proxy">IP2PROXY-IP-COUNTRY.BIN</a>.   
 
-5. Network upload and download speed: <a href="https://ipinfo.io/">ipinfo</a> is used to extract the average network speeds for the subnet that the attacker IP resides in.
+5. Anycast address usage: <a href="https://ipinfo.io/">ipinfo</a> is used to infer whether the attacker IP resides is an "Anycast" IP address. Anycast addresses are addresses that are shared among multiple systems to improve the performance.
 
 6. Open ports: Two Internet scanning services of <a href="https://censys.io/">Censys</a> and  <a href="https://shodan.io/">Shodan</a> are used to infer the open ports of the attacking hosts. The first time you try a lookup using one of these databases, you will be prompted to provide the coresponding api keys.
 
 7. Operating System: Shodan database is used to lookup the operating system (if such info exists) of the attacker hosts. As mentioned above, an api key is needed to run the lookups.   
 
+8. Map plot: Plots a world map plot of the IP addresses of attacker nodes in the fingerprint using the <a href="https://ipinfo.io/tools/map">Map IPs</a> tool of <a href="https://ipinfo.io/">ipinfo</a>.
+
+9. M-LAB: Performs a network speed lookup using dat from <a href="https://www.measurementlab.net/">Measurement Lab</a>. Currently the lookups are done for the ASN average speed. This can be in practice a very coase-grained estimate for a single host. However, this is done as the coverage of the M-Lab data is too low at the moment.
 
