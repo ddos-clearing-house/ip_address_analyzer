@@ -30,7 +30,10 @@ This package is compatible with the fingerprints that have a similar syntax to o
 ./ip_analyzer.py --input /path/to/input/fingerprint.json
 ```
 
-4. Check the generated fingerprint (json file). 
+4. Select the desired lookups to run from the menu. Some of the lookups require you to have api keys for the corresponding service and others run without any prerequisites. Check "Supported lookups" for more details.
+
+
+5. Check the generated fingerprint (json file). 
 
 The enriched fingerprints are stored in the <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/output">output</a> directory of the repository. You might use any tool to explore the additional metadata in the generated fingerprint.
 
