@@ -22,8 +22,8 @@ git clone https://github.com/ddos-clearing-house/supplementary_components.git
 2. Create a virtual environment (optional) and install dependencies
 
 ```
-python -m venv ./python-venv
-source python-venv/bin/activate
+python -m venv ./ip-analyzer
+source ip-analyzer/bin/activate
 pip install -r requirements.txt
 ```
 
