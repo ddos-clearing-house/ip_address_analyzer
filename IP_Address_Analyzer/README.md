@@ -13,20 +13,27 @@ This script gets a json DDoS fingerprint file as input and adds metadata for the
 
 ## How to start?
 
-1. Install the ip_address_analyzer
+1. Clone the ip_address_analyzer source code
 
 ```bash
 git clone https://github.com/ddos-clearing-house/supplementary_components.git
-pip3 install -r requirements.txt
-chmod +x ip_analyzer.py
+
+```
+2. Create a virtual environment (optional) and install dependencies
+
+```
+python -m venv ./python-venv
+source python-venv/bin/activate
+pip install -r requirements.txt
 ```
 
-2. Provide a raw fingerprint to be analyzed
+3. Provide a raw fingerprint to be analyzed
 
 This package is compatible with the fingerprints that have a similar syntax to ones produced as the output of running the <a href="https://github.com/ddos-clearing-house/ddos_dissector">DDoS Dissector</a> component. Sample input fingerprints are provided in the <a href="https://github.com/ramin-y/IP_Address_Analyzer/tree/main/input">input</a> directory of the repository.
 
-3. Run the software
+4. Run the software
 ```
+chmod +x ip_analyzer.py
 ./ip_analyzer.py --input /path/to/input/fingerprint.json
 ```
 
