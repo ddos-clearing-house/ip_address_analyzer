@@ -566,28 +566,37 @@ def dir_cleanup():
 
 def map_plot():
 
-    global_ips.to_csv('ip_list.csv', header=False, index=False)
-    #x=os.popen("cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\"").read()
-    #print(x)
+    if len(global_ips)>500000:
+        print("[Error] The list should have at most 500000 distinct IPs.")
+        return ""
+    else:
+        global_ips.to_csv('ip_list.csv', header=False, index=False)
+        #x=os.popen("cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\"").read()
+        #print(x)
 
-    output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
-    map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
-    print ("[INFO] map URL: ", map_url)
-    os.system("rm ip_list.csv")
-    return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+        output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
+        map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+        print ("[INFO] map URL: ", map_url)
+        os.system("rm ip_list.csv")
+        return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
 
 
 def ip_summary():
 
-    global_ips.to_csv('ip_list.csv', header=False, index=False)
-    #x=os.popen("cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\"").read()
-    #print(x)
+    if len(global_ips)<10 or len(global_ips)>500000:
+        print("[Error] The list should have at least 10 and at most 500000 distinct IPs.")
+        return ""
+    else:    
+        global_ips.to_csv('ip_list.csv', header=False, index=False)
+        #x=os.popen("cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\"").read()
+        #print(x)
 
-    output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/tools/summarize-ips?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
-    map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
-    print ("[INFO] IP Summarization URL: ", map_url)
-    os.system("rm ip_list.csv")
-    return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+        output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/tools/summarize-ips?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
+        print(output)
+        map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+        print ("[INFO] IP Summarization URL: ", map_url)
+        os.system("rm ip_list.csv")
+        return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
 
 
 if __name__ == '__main__':
