@@ -67,3 +67,6 @@ The number of IP addresses is limited to 500000 IPs.
 
 9. M-LAB: Performs a network speed lookup using dat from <a href="https://www.measurementlab.net/">Measurement Lab</a>. Currently the lookups are done for the ASN average speed. This can be in practice a very coase-grained estimate for a single host. However, this is done as the coverage of the M-Lab data is too low at the moment.
 
+10. IP Summarization: Provides a visual overview of the public IP addresses of attacker nodes in the fingerprint using the <a href="https://ipinfo.io/tools/summarize-ips">IP Summarization</a> tool of <a href="https://ipinfo.io/">ipinfo</a>.
+The number of IP addresses is limited from 10 to 500000 IPs.
+
