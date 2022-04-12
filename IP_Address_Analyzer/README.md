@@ -35,7 +35,7 @@ This package is compatible with the fingerprints that have a similar syntax to o
 4. Run the software
 ```
 
-python3 ip_analyzer.py --input /path/to/input/fingerprint.json
+python3 src/ip_analyzer.py --input /path/to/input/fingerprint.json
 ```
 
 5. Select the desired lookups to run from the menu. Some of the lookups require you to have api keys for the corresponding service and others run without any prerequisites. Check <a href="https://github.com/ddos-clearing-house/supplementary_components/blob/master/IP_Address_Analyzer/README.md#supported-lookups">Supported lookups</a> for more details.
