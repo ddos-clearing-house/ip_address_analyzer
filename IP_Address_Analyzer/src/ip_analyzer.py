@@ -34,7 +34,7 @@ from dotenv import load_dotenv
 def bgp_update():
 
 
-    if not os.path.exists('data/bgp_data/ipasn_'+today+'.dat '):
+    if not os.path.exists('data/bgp_data/ipasn_'+today+'.dat'):
         try:
             os.system("rm data/bgp_data/* > /dev/null 2>&1")
         except:
