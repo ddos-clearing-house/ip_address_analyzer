@@ -63,6 +63,7 @@ The enriched fingerprints are stored in the <a href="https://github.com/ramin-y/
 7. Operating System: Shodan database is used to lookup the operating system (if such info exists) of the attacker hosts. As mentioned above, an api key is needed to run the lookups.   
 
 8. Map plot: Plots a world map plot of the IP addresses of attacker nodes in the fingerprint using the <a href="https://ipinfo.io/tools/map">Map IPs</a> tool of <a href="https://ipinfo.io/">ipinfo</a>.
+The number of IP addresses is limited to 500000 IPs.
 
 9. M-LAB: Performs a network speed lookup using dat from <a href="https://www.measurementlab.net/">Measurement Lab</a>. Currently the lookups are done for the ASN average speed. This can be in practice a very coase-grained estimate for a single host. However, this is done as the coverage of the M-Lab data is too low at the moment.
 
