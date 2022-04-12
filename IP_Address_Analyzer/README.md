@@ -23,9 +23,9 @@ cd supplementary_components/IP_Address_Analyzer/;
 2. Create a virtual environment (optional) and install dependencies
 
 ```
-python -m venv ./ip-analyzer
+python3 -m venv ./ip-analyzer
 source ip-analyzer/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 3. Provide a raw fingerprint to be analyzed
@@ -34,8 +34,8 @@ This package is compatible with the fingerprints that have a similar syntax to o
 
 4. Run the software
 ```
-chmod +x ip_analyzer.py
-./ip_analyzer.py --input /path/to/input/fingerprint.json
+
+python3 ip_analyzer.py --input /path/to/input/fingerprint.json
 ```
 
 5. Select the desired lookups to run from the menu. Some of the lookups require you to have api keys for the corresponding service and others run without any prerequisites. Check <a href="https://github.com/ddos-clearing-house/supplementary_components/blob/master/IP_Address_Analyzer/README.md#supported-lookups">Supported lookups</a> for more details.
