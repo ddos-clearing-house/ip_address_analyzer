@@ -16,7 +16,8 @@ This script gets a json DDoS fingerprint file as input and adds metadata for the
 1. Clone the ip_address_analyzer source code
 
 ```bash
-git clone https://github.com/ddos-clearing-house/supplementary_components.git
+git clone https://github.com/ddos-clearing-house/supplementary_components.git;
+cd supplementary_components/IP_Address_Analyzer/;
 
 ```
 2. Create a virtual environment (optional) and install dependencies
