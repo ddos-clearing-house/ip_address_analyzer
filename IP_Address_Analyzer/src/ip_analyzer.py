@@ -1,17 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-###############################################################################
-# CONCORDIA Project
-#  
-# This project has received funding from the European Union’s Horizon
-# 2020 Research and Innovation program under Grant Agreement No 830927.
-#  
-# Ramin Yazdani - r.yazdani@utwente.nl
-###############################################################################
-
-###############################################################################
-
 from __future__ import unicode_literals
 import os
 import sys
@@ -26,6 +15,7 @@ import censys.ipv4
 import shodan
 import argparse
 import pandas as pd
+import numpy as np
 import zipfile
 import tarfile
 import re
@@ -44,14 +34,14 @@ from dotenv import load_dotenv
 def bgp_update():
 
 
-    if not os.path.exists('data/bgp_data/ipasn_'+today+'.dat'):
+    if not os.path.exists('data/bgp_data/ipasn_'+today+'.dat '):
         try:
-            os.system("rm data/bgp_data/*")
+            os.system("rm data/bgp_data/* /dev/null 2>&1")
         except:
             pass
-        os.system("pyasn_util_download.py --latest")
+        os.system("pyasn_util_download.py --latest > /dev/null 2>&1")
         os.system("mv rib.* data/bgp_data/")
-        os.system("pyasn_util_convert.py --single data/bgp_data/rib.* data/bgp_data/ipasn_"+today+".dat")
+        os.system("pyasn_util_convert.py --single data/bgp_data/rib.* data/bgp_data/ipasn_"+today+".dat > /dev/null 2>&1")
         os.system("rm data/bgp_data/rib.*")
 
 
@@ -299,7 +289,7 @@ def ip2location_ip2proxy_bin_lookup(ip):
     for field in desired_fields:
         try:
             list.append (getattr(record, field))
-            if r == 'usage_type':
+            if field == 'usage_type':
                 flag = 1
         except:
             list.append ("-")
@@ -539,7 +529,7 @@ def api_key_manager():
 
 
 
-def logo():
+def print_logo():
 
    print ('''
   _____  _____                  _   _            _   __     __ ______ ______  _____ 
@@ -581,14 +571,15 @@ def map_plot():
 
     output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
     map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
-    print ("map URL: ", map_url)
+    print ("[INFO] map URL: ", map_url)
     os.system("rm ip_list.csv")
     return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
 
 
 if __name__ == '__main__':
 
-
+    os.system("clear")
+    print_logo()
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--input', metavar='input_fingerprint', required=True, help='Input fingurprint file name')
     args = parser.parse_args()
@@ -605,8 +596,7 @@ if __name__ == '__main__':
 
     df_lookup = pd.DataFrame ({'lookup_number': [1,2,3,4,5,6,7,8,9], 'lookup_name': ['ipaddress', 'asn', 'ip_lite', 'ip2location', 'ipinfo', 'censys', 'shodan', 'map', 'mlab']})
 
-    os.system("clear")
-    logo()
+
     print ("This script adds info about IP addresses existing in a fingerprint by looking up multiple sources.\n")
     print ("List of available tests to run:\n")
     print ("    1) IP address type (always runs)")
@@ -623,6 +613,9 @@ if __name__ == '__main__':
     lookup_list = list(df_lookup[df_lookup['lookup_number'].isin(input_list)]['lookup_name'])
 
     today=date.today().strftime("%Y%m%d")
+    
+    os.system("clear")
+    print_logo()
 
     dir_cleanup()
     api_key_manager()
@@ -652,7 +645,7 @@ if __name__ == '__main__':
 
 
     # Check IP types and filter public IP addresses for further investigations:
-    print("Running IP-type analysis ...")
+    print("[INFO] Running IP-type analysis ...")
     iptype_results=[]
     iptype_results.extend(df_iplist.Source.apply(ip_type))
     df_ipaddress = pd.DataFrame(iptype_results,columns=["Source","is_global", "is_private", "is_loopback", "is_link_local", "is_multicast", "is_reserved", "is_unspecified"])
@@ -663,50 +656,50 @@ if __name__ == '__main__':
 
 
     if 'asn' in lookup_list:
-        print ("Running ASN lookups using RouteViews BGP data ...")
+        print ("[INFO] Running ASN lookups using RouteViews BGP data ...")
         bgp_update()
         asn_results = []
         asn_results.extend(global_ips.Source.apply(asn_lookup))
         df_asn = pd.DataFrame(asn_results, columns=["Source", "ASN"])
 
     if 'ip_lite' in lookup_list:
-        print ("Running geo-ip queries using IP2Location and IP2Proxy Lite ...")
+        print ("[INFO] Running geo-ip queries using IP2Location and IP2Proxy Lite ...")
         ip2l_ip2p_lite_results= []
         ip2l_ip2p_lite_results.extend(global_ips.Source.apply(ip2location_ip2proxy_lite_bin_lookup))
         df_ip_lite = pd.DataFrame(ip2l_ip2p_lite_results, columns=["Source", "cc", "c_name", "isp", "latitude", "longitude", "net_speed", "usage_type"])
 
     if 'ip2location' in lookup_list:
-        print ("Running geo-ip queries using IP2Location and/or IP2Proxy ...")
+        print ("[INFO] Running geo-ip queries using IP2Location and/or IP2Proxy ...")
         ip2l_ip2p_results= []
         ip2l_ip2p_results.extend(global_ips.Source.apply(ip2location_ip2proxy_bin_lookup))
         df_ip2location = pd.DataFrame(ip2l_ip2p_results, columns=["Source", "cc", "c_name", "isp", "latitude", "longitude", "net_speed", "usage_type"])
         #df_ip2location_csv = ip2location_csv_lookup(global_ips)
 
     if 'ipinfo' in lookup_list:
-        print ("Running anycast lookup using ipinfo ...")
+        print ("[INFO] Running anycast lookup using ipinfo ...")
         ipinfo_results=[]
         ipinfo_results.extend(global_ips.Source.apply(ipinfo))
         df_ipinfo = pd.DataFrame(ipinfo_results,columns=["Source","Anycast"])
 
 
     if 'censys' in lookup_list:
-        print ("Running open ports queries using Censys ...")
+        print ("[INFO] Running open ports queries using Censys ...")
         censys_results=[]
         censys_results.extend(global_ips.Source.apply(censys_query))
         df_censys = pd.DataFrame(censys_results, columns=["Source","Open_ports"])
 
     if 'shodan' in lookup_list:
-        print ("Running OS & open ports queries using Shodan ...")
+        print ("[INFO] Running OS & open ports queries using Shodan ...")
         shodan_results=[]
         shodan_results.extend(global_ips.Source.apply(shodan_query))
         df_shodan = pd.DataFrame(shodan_results, columns=["Source","OS","Open_ports"])
 
     if 'map' in lookup_list:
-        print ("Generating a world map of public IPs in the fingerprint ...")
+        print ("[INFO] Generating a world map of public IPs in the fingerprint ...")
         map_plot = map_plot()
         
     if 'mlab' in lookup_list:
-        print ("Running network speed measurement queries using M-LAB ...")
+        print ("[INFO] Running network speed measurement queries using M-LAB ...")
         if 'asn' not in lookup_list:
             bgp_update()
             asn_results = []
