@@ -36,7 +36,7 @@ def bgp_update():
 
     if not os.path.exists('data/bgp_data/ipasn_'+today+'.dat '):
         try:
-            os.system("rm data/bgp_data/* /dev/null 2>&1")
+            os.system("rm data/bgp_data/* > /dev/null 2>&1")
         except:
             pass
         os.system("pyasn_util_download.py --latest > /dev/null 2>&1")
