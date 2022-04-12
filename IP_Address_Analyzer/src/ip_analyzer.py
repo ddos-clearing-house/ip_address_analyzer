@@ -621,6 +621,9 @@ if __name__ == '__main__':
     dir_cleanup()
     api_key_manager()
     load_dotenv()
+    
+    os.system("clear")
+    print_logo()
 
     # List IP addresses exisiting in the fingerprint file:
     ip_list = []
