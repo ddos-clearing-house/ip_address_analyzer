@@ -577,6 +577,19 @@ def map_plot():
     return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
 
 
+def ip_summary():
+
+    global_ips.to_csv('ip_list.csv', header=False, index=False)
+    #x=os.popen("cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/map?cli=1\"").read()
+    #print(x)
+
+    output = Popen(["cat ip_list.csv | curl -XPOST --data-binary @- \"ipinfo.io/tools/summarize-ips?cli=1\""], stdout=PIPE, stderr=PIPE, shell=True).communicate()[0]
+    map_url = ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+    print ("[INFO] IP Summarization URL: ", map_url)
+    os.system("rm ip_list.csv")
+    return ast.literal_eval(output.decode('utf-8'))["reportUrl"]
+
+
 if __name__ == '__main__':
 
     os.system("clear")
@@ -595,7 +608,7 @@ if __name__ == '__main__':
     path, file = os.path.split(input_file)
 
 
-    df_lookup = pd.DataFrame ({'lookup_number': [1,2,3,4,5,6,7,8,9], 'lookup_name': ['ipaddress', 'asn', 'ip_lite', 'ip2location', 'ipinfo', 'censys', 'shodan', 'map', 'mlab']})
+    df_lookup = pd.DataFrame ({'lookup_number': [1,2,3,4,5,6,7,8,9,10], 'lookup_name': ['ipaddress', 'asn', 'ip_lite', 'ip2location', 'ipinfo', 'censys', 'shodan', 'map', 'mlab', 'ip_summary']})
 
 
     print ("This script adds info about IP addresses existing in a fingerprint by looking up multiple sources.\n")
@@ -608,7 +621,8 @@ if __name__ == '__main__':
     print ("    6) Open ports lookup on Censys")
     print ("    7) Operating system and open ports lookup on Shodan")
     print ("    8) Plot a world map of IP address geolocations")
-    print ("    9) Network speed measurements of M-LAB\n")
+    print ("    9) Network speed measurements of M-LAB")
+    print ("   10) IP Summarization using ipinfo\n")
 
     input_list = list(map(int, input("Enter the list of desired queries to run separated by space (numbers only): \n").split()))
     lookup_list = list(df_lookup[df_lookup['lookup_number'].isin(input_list)]['lookup_name'])
@@ -715,6 +729,11 @@ if __name__ == '__main__':
         df_mlab = pd.DataFrame(mlab_results,columns=["ASN", "AS_Average_Upload_Mbps","AS_Average_Download_Mbps"])
         df_mlab = pd.merge(df_mlab, df_asn, on=["ASN"])
 
+    if 'ip_summary' in lookup_list:
+        print ("[INFO] Generating an IP summary of public IPs in the fingerprint ...")
+        ip_summary = ip_summary()
+        
+        
     fingerprint_json['attackers']={}
     fingerprint_json['amplifiers']={}
 
