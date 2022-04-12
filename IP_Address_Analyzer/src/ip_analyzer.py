@@ -27,6 +27,7 @@ from urllib.request import Request, urlopen
 from subprocess import *
 from datetime import datetime, date
 from dotenv import load_dotenv
+from getpass import getpass
 #from google.cloud import bigquery
 
 
@@ -500,7 +501,7 @@ def api_key_manager():
         if 'ip_lite' in lookup_list:
             if not 'IP2LOCATION_LITE_DOWNLOAD_KEY' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= input("DOWNLOAD_KEY for IP2Location Lite database is not configured yet. Enter your key here:")
+                    key= getpass("DOWNLOAD_KEY for IP2Location Lite database is not configured yet. Enter your key here:")
                     f.write('IP2LOCATION_LITE_DOWNLOAD_KEY='+key+'\n')
                 f.close()
 
@@ -508,14 +509,14 @@ def api_key_manager():
         if 'censys' in lookup_list:
             if not 'CENSYS_ID' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= input("API ID for Censys database is not configured yet. Enter your ID here:")
+                    key= getpass("API ID for Censys database is not configured yet. Enter your ID here:")
                     f.write('CENSYS_ID='+key+'\n')
                 f.close()
 
             apikey_file.seek(0)
             if not 'CENSYS_SECRET' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= input("API SECRET for Censys database is not configured yet. Enter your key here:")
+                    key= getpass("API SECRET for Censys database is not configured yet. Enter your key here:")
                     f.write('CENSYS_SECRET='+key+'\n')
                 f.close()
 
@@ -523,7 +524,7 @@ def api_key_manager():
         if 'shodan' in lookup_list:
             if not 'SHODAN_API_KEY' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= input("API_KEY for Shodan database is not configured yet. Enter your key here:")
+                    key= getpass("API_KEY for Shodan database is not configured yet. Enter your key here:")
                     f.write('SHODAN_API_KEY='+key+'\n')
                 f.close()
 
