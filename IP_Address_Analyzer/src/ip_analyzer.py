@@ -11,8 +11,7 @@ import IP2Location
 import IP2Proxy
 import pyasn
 import requests
-import censys.ipv4
-import shodan
+from censys.search import CensysHostsimport shodan
 import argparse
 import pandas as pd
 import numpy as np
@@ -152,32 +151,17 @@ def ipinfo(ip):
 
 
 
-
 def censys_query(ip):
 
-    #os.system("censys config")
+    h = CensysHosts() 
+    host = h.view(ip)
+    try: 
+        print(len(host["services"]))
+        return ip, list(host["services"][i]["port"] for i in range(0,len(host["services"])))
+    except:
+        return ip, "-"
     
-    censys_id = os.getenv('CENSYS_ID')
-    censys_secret = os.getenv('CENSYS_SECRET')
-
-    c = censys.ipv4.CensysIPv4(censys_id, censys_secret)
-
-    fields = [
-        "ip",
-        "protocols",
-    ]
-
-    list = []
-
-    for page in c.search(
-            "ip: "+str(ip),
-            fields,
-            max_records=10,
-        ):
-        list.extend(pd.DataFrame(page, index=None).protocols)
-    return ip, list
-
-
+    
 
 def shodan_query(ip):
 
@@ -509,23 +493,23 @@ def api_key_manager():
         if 'censys' in lookup_list:
             if not 'CENSYS_ID' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= getpass("API ID for Censys database is not configured yet. Enter your ID here:")
-                    f.write('CENSYS_ID='+key+'\n')
+                    censys_id= getpass("API ID for Censys database is not configured yet. Enter your ID here:")
+                    f.write('CENSYS_ID='+censys_id+'\n')
                 f.close()
 
             apikey_file.seek(0)
             if not 'CENSYS_SECRET' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= getpass("API SECRET for Censys database is not configured yet. Enter your key here:")
-                    f.write('CENSYS_SECRET='+key+'\n')
+                    censys_secret= getpass("API SECRET for Censys database is not configured yet. Enter your key here:")
+                    f.write('CENSYS_SECRET='+censys_secret+'\n')
                 f.close()
 
         apikey_file.seek(0)
         if 'shodan' in lookup_list:
             if not 'SHODAN_API_KEY' in apikey_file.read():
                 with open('.env', 'a+') as f:
-                    key= getpass("API_KEY for Shodan database is not configured yet. Enter your key here:")
-                    f.write('SHODAN_API_KEY='+key+'\n')
+                    shodan_key= getpass("API_KEY for Shodan database is not configured yet. Enter your key here:")
+                    f.write('SHODAN_API_KEY='+shodan_key+'\n')
                 f.close()
 
 
@@ -711,6 +695,10 @@ if __name__ == '__main__':
 
     if 'censys' in lookup_list:
         print ("[INFO] Running open ports queries using Censys ...")
+        censys_id = os.getenv('CENSYS_ID')
+        os.environ["CENSYS_API_ID"] = censys_id
+        censys_secret = os.getenv('CENSYS_SECRET')
+        os.environ["CENSYS_API_SECRET"] = censys_secret 
         censys_results=[]
         censys_results.extend(global_ips.Source.apply(censys_query))
         df_censys = pd.DataFrame(censys_results, columns=["Source","Open_ports"])
