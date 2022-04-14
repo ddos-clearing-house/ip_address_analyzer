@@ -23,9 +23,9 @@ cd supplementary_components/IP_Address_Analyzer/;
 2. Create a virtual environment (optional) and install dependencies
 
 ```
-python3 -m venv ./ip-analyzer
-source ip-analyzer/bin/activate
-pip3 install -r requirements.txt
+python3 -m venv ./ip-analyzer;
+source ip-analyzer/bin/activate;
+pip3 install -r requirements.txt;
 ```
 
 3. Provide a raw fingerprint to be analyzed
