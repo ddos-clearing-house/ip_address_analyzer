@@ -11,7 +11,8 @@ import IP2Location
 import IP2Proxy
 import pyasn
 import requests
-from censys.search import CensysHostsimport shodan
+from censys.search import CensysHosts
+import shodan
 import argparse
 import pandas as pd
 import numpy as np
