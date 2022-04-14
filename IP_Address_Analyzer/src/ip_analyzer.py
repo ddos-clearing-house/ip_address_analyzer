@@ -157,7 +157,6 @@ def censys_query(ip):
     h = CensysHosts() 
     host = h.view(ip)
     try: 
-        print(len(host["services"]))
         return ip, list(host["services"][i]["port"] for i in range(0,len(host["services"])))
     except:
         return ip, "-"
